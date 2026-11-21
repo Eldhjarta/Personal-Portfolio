@@ -30,7 +30,7 @@
         <!-- Botones de acciones accionarios -->
         <nav class="hud-buttons">
             
-            <!-- 1. ABOUT ME (Desplegable) -->
+            <!-- 1. ABOUT ME (Desplegable) Actualizable  -->
             <details class="btn">
                 <summary>👤 ABOUT ME</summary>
                 <div class="dropdown-content">
@@ -62,9 +62,7 @@
             <div class="panel">
                 <h3>Key Skills</h3>
                 <ul class="skills-list">
-                    
-                        <li><span class="icon">⚙️</span> Python Programming &amp; Development</li>
-                    
+                    <li><span class="icon">⚙️</span> Python Programming &amp; Development</li>
                 </ul>
             </div>
 
@@ -72,17 +70,72 @@
             <div class="panel">
                 <h3>Recent Experience</h3>
                 <ul class="exp-list">
-                    
-                        
-                            <li>Coming Soon</li>
-                        
-                    
+                    <li>Coming Soon</li>
                 </ul>
             </div>
             
         </section>
 
     </div>
+
+    
+    
+    <!-- Ventana del Chat -->
+    <div id="chat-widget">
+        <div id="chat-header">🤖 pip-bot-Hk47</div>
+        <div id="chat-messages">
+            <div class="bot-msg">Bienvenido soy Revan Nerevarine pip-bot-Hk47, en que puedo Ayudarte? Quieres saber de mi o de mi Creador?</div>
+        </div>
+        <div id="chat-suggestions">
+            <button class="suggestion-btn" onclick="enviarMensaje('Hola')">Saludar 👋</button>
+            <button class="suggestion-btn" onclick="enviarMensaje('Quien es tu creador')">Sobre el creador 👤</button>
+            <button class="suggestion-btn" onclick="enviarMensaje('Cuentame de tus proyectos')">Proyectos ⚙️</button>
+        </div>
+        <div id="chat-input-area">
+            <input type="text" id="chat-input" placeholder="Escribe tu mensaje...">
+            <button id="chat-send">Enviar</button>
+        </div>
+    </div>
+
+   
+    <script>
+        // ¡AQUÍ ESTÁ CONECTANdo a Render mi bot Revan!
+        const API_URL = 'https://revan-chatbot.onrender.com/chat'; 
+
+        const chatInput = document.getElementById('chat-input');
+        const chatSend = document.getElementById('chat-send');
+        const chatMessages = document.getElementById('chat-messages');
+
+        async function enviarMensaje(texto) {
+            if (!texto) return;
+            
+            // Mostrar el mensaje del usuario
+            chatMessages.innerHTML += `<div class="user-msg">${texto}</div>`;
+            chatInput.value = '';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            try {
+                
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ mensaje: texto })
+                });
+                const data = await response.json();
+                
+                
+                chatMessages.innerHTML += `<div class="bot-msg">${data.respuesta}</div>`;
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            } catch (error) {
+                chatMessages.innerHTML += `<div class="bot-msg">Error: Mis circuitos no responden.</div>`;
+            }
+        }
+
+        chatSend.addEventListener('click', () => enviarMensaje(chatInput.value.trim()));
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') enviarMensaje(chatInput.value.trim());
+        });
+    </script>
 
 </body>
 </html>
